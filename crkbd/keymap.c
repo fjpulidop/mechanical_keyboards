@@ -88,7 +88,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-----------------------------------------------------|                    |-----------------------------------------------------|
      XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, RGB_TOG,                       XXXXXXX, XXXXXXX,  XXXXXXX,   XXXXXXX,   XXXXXXX,   XXXXXXX,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-     XXXXXXX, RGB_HUI, RGB_SAI, RGB_VAI, RGB_SPI, RGB_MOD,                       XXXXXXX, XXXXXXX,  XXXXXXX,   XXXXXXX,   XXXXXXX,   RESET,  \
+     XXXXXXX, RGB_HUI, RGB_SAI, RGB_VAI, RGB_SPI, RGB_MOD,                       XXXXXXX, XXXXXXX,  XXXXXXX,   XXXXXXX,   XXXXXXX,   XXXXXXX,  \
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
      XXXXXXX, RGB_HUD, RGB_SAD, RGB_VAD, RGB_SPD, RGBRST,                        XXXXXXX, XXXXXXX,  XXXXXXX,   XXXXXXX,   XXXXXXX,   XXXXXXX,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -99,7 +99,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 // Tap Dance definitions
-qk_tap_dance_action_t tap_dance_actions[] = {
+tap_dance_action_t tap_dance_actions[] = {
     // Tap once for ;, twice for :
     [TD_PC] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, LSFT(KC_SCLN)),
     [TD_COMI] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, LSFT(KC_QUOT)),
@@ -124,24 +124,26 @@ void matrix_init_user(void) {
     #endif
 }
 
-void rgb_matrix_indicators_user(void) {
+bool rgb_matrix_indicators_user(void) {
   #ifdef RGB_MATRIX_ENABLE
-  switch (biton32(layer_state)) {
-    case _RAISE:
-      rgb_matrix_set_color_all(255, 0, 0);
-      break;
-
-    case _LOWER:
-      rgb_matrix_set_color_all(1, 0, 255);
-      break;
-
-    default:
-      if (host_keyboard_leds() & (1<<USB_LED_CAPS_LOCK)) {
-          rgb_matrix_set_color_all(0, 255, 0);
-      }
-      break;
-  }
+    switch (biton32(layer_state)) {
+      case _RAISE:
+        rgb_matrix_set_color_all(255, 0, 1);
+        break;
+  
+      case _LOWER:
+        rgb_matrix_set_color_all(1, 0, 255);
+        break;
+  
+      default:
+        if (host_keyboard_leds() & (KC_CAPS_LOCK)) {
+            rgb_matrix_set_color_all(0, 255, 0);
+        }
+        break;
+    }
   #endif
+
+  return 1;
 }
 
 #ifdef OLED_ENABLE
@@ -393,14 +395,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
          case MACRO1:
     if (record->event.pressed) {
-            SEND_STRING("Aqui pones lo que quieras en el macro 1");
+            SEND_STRING("MACRO1");
         } else {
             
         }
         return false;
          case MACRO2:
     if (record->event.pressed) {
-            SEND_STRING("Aqui pones lo que quieras en el macro 2");
+            SEND_STRING("MACRO2");
         } else {
             
         }
